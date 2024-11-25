@@ -31,4 +31,18 @@ return [
         'base' => env('VOUCHER_USD_API_BASE', 'https://api.voucherusd.com/api/v1')
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | API Parameters
+    |--------------------------------------------------------------------------
+    |
+    | API Parameters for get data voucher usd
+    |
+    */
+
+    'params' => [
+        'client_id' => env('VOUCHER_USD_CLIENT_ID'),
+        'client_secret' => env('VOUCHER_USD_CLIENT_SECRET')
+    ],
+
 ];
