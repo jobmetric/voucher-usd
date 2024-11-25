@@ -64,4 +64,40 @@ class VoucherUsd
             ];
         }
     }
+
+    /**
+     * Get balance.
+     *
+     * @return array
+     */
+    public function balance(): array
+    {
+        $auth = $this->auth();
+
+        if ($auth['ok']) {
+            $response = Http::withToken($auth['data']['token'])->get(config('voucher-usd.api_urls.base') . '/b2b/accounts/balance');
+
+            $body = json_decode($response->body(), true);
+
+            if ($response->ok()) {
+                return [
+                    'ok' => true,
+                    'message' => $body['message'],
+                    'data' => [
+                        'available' => $body['result']['availableBalance'],
+                        'actual' => $body['result']['actualBalance'],
+                    ],
+                    'status' => 200,
+                ];
+            } else {
+                return [
+                    'ok' => false,
+                    'message' => $response['title'],
+                    'status' => 400,
+                ];
+            }
+        } else {
+            return $auth;
+        }
+    }
 }

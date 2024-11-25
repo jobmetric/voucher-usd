@@ -28,4 +28,24 @@ class VoucherUsdTest extends BaseVoucherUsd
 
         }
     }
+
+    /**
+     * @throws Throwable
+     */
+    public function test_balance()
+    {
+        $response = VoucherUsd::balance();
+
+        $this->assertArrayHasKey('ok', $response);
+        $this->assertArrayHasKey('message', $response);
+        $this->assertArrayHasKey('status', $response);
+        if ($response['ok']) {
+            $this->assertEquals(200, $response['status']);
+            $this->assertArrayHasKey('data', $response);
+            $this->assertArrayHasKey('available', $response['data']);
+            $this->assertArrayHasKey('actual', $response['data']);
+        } else {
+            $this->assertEquals(400, $response['status']);
+        }
+    }
 }

@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Facade;
  * @see \JobMetric\VoucherUsd\VoucherUsd
  *
  * @method static array auth()
+ * @method static array balance()
  */
 class VoucherUsd extends Facade
 {
