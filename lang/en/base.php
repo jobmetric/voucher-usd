@@ -12,6 +12,13 @@ return [
     |
     */
 
-    'package' => 'Voucher USD',
+    "validation" => [
+        "errors" => "Validation errors",
+    ],
+
+    "fields" => [
+        "amount" => "Amount",
+        "note" => "Note",
+    ],
 
 ];

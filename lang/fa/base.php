@@ -12,6 +12,13 @@ return [
     |
     */
 
-    'package' => 'Voucher USD',
+    "validation" => [
+        "errors" => "خطاهای اعتبارسنجی",
+    ],
+
+    "fields" => [
+        "amount" => "مبلغ",
+        "note" => "توضیحات",
+    ],
 
 ];

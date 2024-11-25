@@ -4,6 +4,8 @@ namespace JobMetric\VoucherUsd;
 
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Validator;
+use JobMetric\VoucherUsd\Http\Requests\CreateVoucherRequest;
 
 class VoucherUsd
 {
@@ -98,6 +100,67 @@ class VoucherUsd
             }
         } else {
             return $auth;
+        }
+    }
+
+    /**
+     * Create Voucher.
+     *
+     * @param array $data
+     *
+     * @return array
+     */
+    public function createVoucher(array $data): array
+    {
+        $validator = Validator::make($data, (new CreateVoucherRequest)->rules());
+        if ($validator->fails()) {
+            $errors = $validator->errors()->all();
+
+            return [
+                'ok' => false,
+                'message' => trans('voucher-usd::base.validation.errors'),
+                'errors' => $errors,
+                'status' => 422
+            ];
+        } else {
+            $validated_data = $validator->validated();
+
+            $auth = $this->auth();
+
+            if ($auth['ok']) {
+                $data = [
+                    'amount' => $validated_data['amount'],
+                    'currency' => 'USD',
+                    'additionalDescription' => $validated_data['note'],
+                ];
+
+                $response = Http::withToken($auth['data']['token'])->post(config('voucher-usd.api_urls.base') . '/b2b/vouchers', $data);
+
+                $body = json_decode($response->body(), true);
+
+                if ($response->ok()) {
+                    return [
+                        'ok' => true,
+                        'message' => $body['result']['description'] ?? $body['message'],
+                        'data' => [
+                            'voucher_code' => $body['result']['voucherCode']
+                        ],
+                        'status' => 200,
+                    ];
+                } else {
+                    if ($response['title'] == 'InsufficientBalanceException') {
+                        // @todo: send email to admin or make a log or something || or return a message to user || or make a notification || or make a event
+                    }
+
+                    return [
+                        'ok' => false,
+                        'message' => $response['detail'] ?? $response['title'],
+                        'status' => 400,
+                    ];
+                }
+            } else {
+                return $auth;
+            }
         }
     }
 }
