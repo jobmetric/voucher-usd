@@ -1,0 +1,61 @@
+{
+    "name": "jobmetric/voucher-usd",
+    "description": "This package handles payment via the USD voucher website.",
+    "type": "library",
+    "license": "MIT",
+    "keywords": [
+        "laravel",
+        "jobmetric",
+        "package",
+        "voucher",
+        "usd",
+        "payment",
+        "payment method"
+    ],
+    "homepage": "https://doc.jobmetric.net/package/voucher-usd",
+    "authors": [
+        {
+            "name": "Majid Mohammadian",
+            "email": "majeedmohammadian@gmail.com",
+            "homepage": "https://www.linkedin.com/in/majidmohammadian/",
+            "role": "Full Stack Developer"
+        }
+    ],
+    "require": {
+        "php": ">=8.0.1",
+        "ext-json": "*",
+        "laravel/framework": ">=9.19",
+        "jobmetric/laravel-package-core": "^1.17",
+        "guzzlehttp/guzzle": "^7.8.2"
+    },
+    "autoload": {
+        "files": [
+            "src/helpers.php"
+        ],
+        "psr-4": {
+            "JobMetric\\VoucherUsd\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "JobMetric\\VoucherUsd\\VoucherUsdServiceProvider"
+            ],
+            "aliases": {
+                "VoucherUsd": "JobMetric\\VoucherUsd\\Facades\\VoucherUsd"
+            }
+        }
+    },
+    "minimum-stability": "stable",
+    "support": {
+        "issues": "https://github.com/jobmetric/voucher-usd/issues",
+        "forum": "https://twitter.com/jobmetric",
+        "source": "https://github.com/jobmetric/voucher-usd"
+    },
+    "funding": [
+        {
+            "type": "github",
+            "url": "https://github.com/sponsors/majidmohammadian"
+        }
+    ]
+}
