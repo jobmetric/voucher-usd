@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Facade;
  * @method static array auth()
  * @method static array balance()
  * @method static array createVoucher(array $data)
+ * @method static array getVouchers()
  */
 class VoucherUsd extends Facade
 {

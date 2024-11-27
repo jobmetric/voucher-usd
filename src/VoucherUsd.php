@@ -5,6 +5,8 @@ namespace JobMetric\VoucherUsd;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Validator;
+use JobMetric\VoucherUsd\Events\CreateVoucherUsdEvent;
+use JobMetric\VoucherUsd\Events\InsufficientBalanceEvent;
 use JobMetric\VoucherUsd\Http\Requests\CreateVoucherRequest;
 
 class VoucherUsd
@@ -139,6 +141,8 @@ class VoucherUsd
                 $body = json_decode($response->body(), true);
 
                 if ($response->ok()) {
+                    event(new CreateVoucherUsdEvent($body['result']['voucherCode']));
+
                     return [
                         'ok' => true,
                         'message' => $body['result']['description'] ?? $body['message'],
@@ -149,7 +153,7 @@ class VoucherUsd
                     ];
                 } else {
                     if ($response['title'] == 'InsufficientBalanceException') {
-                        // @todo: send email to admin or make a log or something || or return a message to user || or make a notification || or make a event
+                        event(new InsufficientBalanceEvent);
                     }
 
                     return [
@@ -161,6 +165,48 @@ class VoucherUsd
             } else {
                 return $auth;
             }
+        }
+    }
+
+    /**
+     * Get Vouchers.
+     *
+     * @return array
+     */
+    public function getVouchers(): array
+    {
+        $auth = $this->auth();
+
+        if ($auth['ok']) {
+            $response = Http::withToken($auth['data']['token'])->get(config('voucher-usd.api_urls.base') . '/b2b/vouchers');
+
+            $body = json_decode($response->body(), true);
+
+            if ($response->ok()) {
+                return [
+                    'ok' => true,
+                    'message' => $body['result']['description'] ?? $body['message'],
+                    'data' => [
+                        'report' => [
+                            'issued' => $body['result']['report']['issuedVouchersAmount'],
+                            'revoked' => $body['result']['report']['revokedVouchersAmount'],
+                            'spent' => $body['result']['report']['spentVouchersAmount'],
+                            'remain' => $body['result']['report']['remainVouchersAmount'],
+                            'received' => $body['result']['report']['receivedVouchersAmount'],
+                        ],
+                        'vouchers' => $body['result']['vouchers'],
+                    ],
+                    'status' => 200,
+                ];
+            } else {
+                return [
+                    'ok' => false,
+                    'message' => $response['detail'] ?? $response['title'],
+                    'status' => 400,
+                ];
+            }
+        } else {
+            return $auth;
         }
     }
 }
