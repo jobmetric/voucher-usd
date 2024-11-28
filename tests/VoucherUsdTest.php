@@ -114,4 +114,45 @@ class VoucherUsdTest extends BaseVoucherUsd
             $this->assertEquals(400, $response['status']);
         }
     }
+
+    /**
+     * @throws Throwable
+     */
+    public function test_vouchers()
+    {
+        // voucher not found
+        $response = VoucherUsd::showVoucher('123');
+
+        $this->assertArrayHasKey('ok', $response);
+        $this->assertArrayHasKey('message', $response);
+        $this->assertArrayHasKey('status', $response);
+        $this->assertFalse($response['ok']);
+        $this->assertEquals('Voucher not found', $response['message']);
+        $this->assertEquals(404, $response['status']);
+
+        $vouchers = VoucherUsd::getVouchers();
+        $voucher_code = $vouchers['data']['vouchers'][0]['voucherCode'] ?? null;
+
+        $response = VoucherUsd::showVoucher($voucher_code);
+
+        $this->assertArrayHasKey('ok', $response);
+        $this->assertArrayHasKey('message', $response);
+        $this->assertArrayHasKey('status', $response);
+        if ($response['ok']) {
+            $this->assertEquals(200, $response['status']);
+
+            $this->assertArrayHasKey('data', $response);
+            $this->assertIsArray($response['data']);
+
+            $this->assertArrayHasKey('verificationRequired', $response['data']);
+            $this->assertArrayHasKey('isValid', $response['data']);
+            $this->assertArrayHasKey('status', $response['data']);
+            $this->assertArrayHasKey('currency', $response['data']);
+            $this->assertArrayHasKey('amount', $response['data']);
+        } else {
+            $this->assertFalse($response['ok']);
+            $this->assertEquals('Voucher not found', $response['message']);
+            $this->assertEquals(404, $response['status']);
+        }
+    }
 }

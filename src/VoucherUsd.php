@@ -185,7 +185,7 @@ class VoucherUsd
             if ($response->ok()) {
                 return [
                     'ok' => true,
-                    'message' => $body['result']['description'] ?? $body['message'],
+                    'message' => $body['message'],
                     'data' => [
                         'report' => [
                             'issued' => $body['result']['report']['issuedVouchersAmount'],
@@ -203,6 +203,55 @@ class VoucherUsd
                     'ok' => false,
                     'message' => $response['detail'] ?? $response['title'],
                     'status' => 400,
+                ];
+            }
+        } else {
+            return $auth;
+        }
+    }
+
+    /**
+     * Show Voucher.
+     *
+     * @param string $voucherCode
+     *
+     * @return array
+     */
+    public function showVoucher(string $voucherCode): array
+    {
+        $auth = $this->auth();
+
+        if ($auth['ok']) {
+            $response = Http::withToken($auth['data']['token'])->get(config('voucher-usd.api_urls.base') . '/b2b/vouchers/' . $voucherCode);
+
+            $body = json_decode($response->body(), true);
+
+            if ($response->ok()) {
+                if ($body['result']['isValid']) {
+                    return [
+                        'ok' => true,
+                        'message' => $body['message'],
+                        'data' => [
+                            'verificationRequired' => $body['result']['verificationRequired'],
+                            'isValid' => $body['result']['isValid'],
+                            'status' => $body['result']['voucherStatus'],
+                            'currency' => $body['result']['voucherCurrency'],
+                            'amount' => $body['result']['voucherAmount'],
+                        ],
+                        'status' => 200,
+                    ];
+                } else {
+                    return [
+                        'ok' => false,
+                        'message' => 'Voucher not found',
+                        'status' => 404,
+                    ];
+                }
+            } else {
+                return [
+                    'ok' => false,
+                    'message' => 'Voucher not found',
+                    'status' => 404,
                 ];
             }
         } else {
