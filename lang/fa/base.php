@@ -13,7 +13,6 @@ return [
     */
 
     "validation" => [
-        "errors" => "خطاهای اعتبارسنجی",
     ],
 
     "fields" => [

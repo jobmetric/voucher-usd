@@ -63,7 +63,7 @@ class VoucherUsdTest extends BaseVoucherUsd
         $this->assertArrayHasKey('message', $response);
         $this->assertArrayHasKey('status', $response);
         $this->assertFalse($response['ok']);
-        $this->assertEquals($response['message'], trans('voucher-usd::base.validation.errors'));
+        $this->assertEquals($response['message'], trans('package-core::base.validation.errors'));
         $this->assertEquals(422, $response['status']);
 
         $response = VoucherUsd::createVoucher([

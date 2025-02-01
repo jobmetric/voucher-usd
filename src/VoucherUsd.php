@@ -120,7 +120,7 @@ class VoucherUsd
 
             return [
                 'ok' => false,
-                'message' => trans('voucher-usd::base.validation.errors'),
+                'message' => trans('package-core::base.validation.errors'),
                 'errors' => $errors,
                 'status' => 422
             ];

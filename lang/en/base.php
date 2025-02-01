@@ -13,7 +13,6 @@ return [
     */
 
     "validation" => [
-        "errors" => "Validation errors",
     ],
 
     "fields" => [
