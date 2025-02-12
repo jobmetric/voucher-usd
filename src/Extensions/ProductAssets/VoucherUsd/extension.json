@@ -1,0 +1,36 @@
+{
+    "extension": "ProductAssets",
+    "name": "VoucherUsd",
+    "version": "1.0.0",
+    "multiple": true,
+    "title": "extension-product-assets-voucher-usd::extension.title",
+    "description": "افزونه ارز الکترونیکی دلار (واچر)",
+    "author": "Job Metric",
+    "email": "jobmetricnet@gmail.com",
+    "website": "jobmetric.net",
+    "creationDate": "2025-02-12 22:30:00",
+    "copyright": "Copyright (c) 2025",
+    "license": "MIT",
+    "fields": [
+        {
+            "name": "client_id",
+            "type": "text",
+            "required": true,
+            "default": null,
+            "label": "extension-product-assets-voucher-usd::extension.fields.client_id.label",
+            "info": "extension-product-assets-voucher-usd::extension.fields.client_id.info",
+            "placeholder": "extension-product-assets-voucher-usd::extension.fields.client_id.placeholder",
+            "validation": "required|string"
+        },
+        {
+            "name": "client_secret",
+            "type": "text",
+            "required": true,
+            "default": null,
+            "label": "extension-product-assets-voucher-usd::extension.fields.client_secret.label",
+            "info": "extension-product-assets-voucher-usd::extension.fields.client_secret.info",
+            "placeholder": "extension-product-assets-voucher-usd::extension.fields.client_secret.placeholder",
+            "validation": "required|string"
+        }
+    ]
+}
