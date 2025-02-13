@@ -31,36 +31,7 @@ class VoucherUsdServiceProvider extends PackageCoreServiceProvider
     public function afterBootPackage(): void
     {
         if (checkDatabaseConnection() && !app()->runningInConsole() && !app()->runningUnitTests()) {
-            $this->loadTranslationPlugin();
-        }
-    }
-
-    /**
-     * Load translation plugin
-     *
-     * @return void
-     */
-    private function loadTranslationPlugin(): void
-    {
-        $ds = DIRECTORY_SEPARATOR;
-        $extensionPath = __DIR__ . $ds . 'Extensions';
-        if (is_dir($extensionPath)) {
-            $extensions = array_diff(scandir($extensionPath), ['..', '.']);
-
-            foreach ($extensions as $extension) {
-                $modules = array_diff(scandir($extensionPath . $ds . $extension), ['..', '.']);
-                foreach ($modules as $module) {
-                    $langFile = $extensionPath . $ds . $extension . $ds . $module . $ds . 'lang' . $ds . app()->getLocale() . $ds . 'extension.php';
-
-                    if (!file_exists($langFile)) {
-                        $langFile = $extensionPath . $ds . $extension . $ds . $module . $ds . "lang${$ds}en${$ds}extension.php";
-                    }
-
-                    if(file_exists($langFile)) {
-                        $this->loadTranslationsFrom($extensionPath . $ds . $extension . $ds . $module . $ds . 'lang', 'extension-' . Str::kebab($extension) . '-' . Str::kebab($module));
-                    }
-                }
-            }
+            loadTranslationExtension(__DIR__ . DIRECTORY_SEPARATOR . 'Extensions');
         }
     }
 }
